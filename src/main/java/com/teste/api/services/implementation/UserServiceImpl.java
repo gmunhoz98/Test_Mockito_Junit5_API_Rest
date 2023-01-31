@@ -3,6 +3,7 @@ package com.teste.api.services.implementation;
 import com.teste.api.domain.User;
 import com.teste.api.repositories.UserRepository;
 import com.teste.api.services.UserService;
+import com.teste.api.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,6 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer id) {
         Optional<User> obj = repository.findById(id);
 
-        return obj.orElse(null);
+        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado!"));
     }
 }
