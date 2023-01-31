@@ -1,12 +1,14 @@
 package com.teste.api.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data //Adiciona Get,Set, Hash e ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "tb_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
