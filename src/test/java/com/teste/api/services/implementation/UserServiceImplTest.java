@@ -15,8 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -59,12 +58,8 @@ class UserServiceImplTest {
     @Test
     void whenFindByIdThenReturnAnObjectNotFoundException() {
         when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado(teste)"));
-        try {
-            service.findById(ID);
-        } catch (Exception ex) {
-            assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals("Objeto não encontrado(teste)", ex.getMessage());
-        }
+        Exception exception = assertThrows(ObjectNotFoundException.class, () -> repository.findById(1));
+        assertTrue("Objeto não encontrado(teste)".contains(exception.getMessage()));
     }
 
     @Test
@@ -102,12 +97,22 @@ class UserServiceImplTest {
             service.create(userDTO);
         } catch (Exception ex) {
             assertEquals(DataIntegratyViolationException.class, ex.getClass());
-            assertEquals("Email já cadastrado", ex.getMessage());
+            assertEquals("Email já cadastrado no sistema", ex.getMessage());
         }
     }
 
     @Test
-    void update() {
+    void whenUpdateThenReturnSuccess() {
+        when(repository.save(any())).thenReturn(user);
+
+        User response = service.update(userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
